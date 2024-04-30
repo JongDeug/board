@@ -26,7 +26,7 @@ app.set('views', __dirname + '/views'); // 뷰 디렉터리 설정
 
 app.get('/', (req, res) => {
     // views.home.handlebars 파일에 데이터를 렌더링
-    res.render('home', { title: '안녕하세요', message: '만나서 반갑습니다!' });
-});q
+    res.render('home', { title: '안녕하세요' });
+});
 
-app.listen(3000);
+app.listen(3000, () => console.log('listening on port 3000'));
