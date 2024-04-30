@@ -1,12 +1,19 @@
 {
-  "name": "board",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+    "name": "board",
+    "version": "1.0.0",
+    "description": "Express, MongoDB를 사용한 게시판 프로젝트",
+    "main": "test.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@eslint/js": "^9.1.1",
+        "eslint": "^9.1.1",
+        "eslint-config-prettier": "^9.1.0",
+        "globals": "^15.1.0",
+        "prettier": "3.2.5"
+    }
 }
