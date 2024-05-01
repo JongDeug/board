@@ -37,13 +37,17 @@
 
 <div>
     {{#with paginator}}
+        <!-- << -->
         <a href="/?page=1&search={{@root.search}}">&lt;&lt;</a>
+
+        <!-- link '<' or nolink '<' -->
         {{#if hasPrev}}
             <a href="/?page={{prevPage}}&search={{@root.search}}">&lt;</a>
         {{else}}
             <a>&lt;</a>
         {{/if}}
 
+        <!-- 현재 페이지랑 같은건 그냥 출력, 나머지는 링크를 달아라 -->
         {{#each pageList}}
             {{#if (equal . @root.paginator.page)}}
                 <a>{{.}}</a>
@@ -52,6 +56,7 @@
             {{/if}}
         {{/each}}
 
+        <!-- link '>' or nolink '>' -->
         {{#if hasNext}}
             <a href="/?page={{nextPage}}&search={{@root.search}}">&gt;</a>
         {{else}}

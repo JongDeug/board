@@ -22,7 +22,6 @@ app.use(express.urlencoded({ extended: true }));
 // ### home
 app.get('/', async (req, res) => {
     const page = parseInt(req.query.page) || 1;
-    console.log(req.query.page)
     const search = req.query.search || '';
 
     try {
@@ -50,8 +49,10 @@ app.post('/write', async (req, res) => {
 
 // ### 상세 페이지
 app.get('/detail/:id', async (req, res) => {
+    const result = await postService.getDetailPost(collection, req.params.id);
     res.render('detail', {
         title: '테스트 게시판',
+        post: result,
     });
 });
 
