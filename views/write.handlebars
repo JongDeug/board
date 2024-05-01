@@ -1,7 +1,8 @@
 <h1>[{{title}}] 글 {{#if (equal mode "create")}}작성{{else}}수정{{/if}}</h1>
 
 <div>
-    <form {{#if (equal mode 'create') }} action='/write' {{else}} action="/modify" {{/if}} name="boardForm" method="post">
+    <form {{#if (equal mode 'create') }}
+    action='/write' {{else}} action="/modify" {{/if}} name="boardForm" method="post">
         <!-- 수정 모드면 id 값을 form 통해서 전달함 -->
         {{#if (equal mode "modify")}}
             <input type="hidden" name="id" value="{{post._id}}">
@@ -24,7 +25,7 @@
         <div>
             <label>
                 비밀번호
-                <input type="password" name="password" placeholder="비밀번호를 넣어주세요">
+                <input id="passwordInput" type="password" name="password" placeholder="비밀번호를 넣어주세요">
             </label>
         </div>
 
@@ -37,8 +38,19 @@
         </div>
 
         <div>
-            <button type="submit">저장</button>
+            <button type="submit" id="submitBtn">저장</button>
             <button type="button" onclick="location.href='/'">취소</button>
         </div>
     </form>
 </div>
+
+<script>
+    // 프론트에서 비밀번호 없으면 처리
+    const submitBtn = document.getElementById('submitBtn');
+    const passwordInput = document.getElementById('passwordInput');
+    submitBtn.addEventListener('click', () => {
+        if (!passwordInput.value) {
+            alert('패스워드를 입력해주세요!');
+        }
+    });
+</script>

@@ -55,6 +55,11 @@ app.get('/modify/:id', async (req, res) => {
 
 app.post('/modify/', async (req, res) => {
     const { id, title, writer, password, content } = req.body;
+    if(!password) {
+        res.status(400);
+        console.error('패스워드가 없음');
+        return;
+    }
 
     const post = {
         title,
@@ -68,6 +73,20 @@ app.post('/modify/', async (req, res) => {
     res.redirect(`/detail/${id}`);
 });
 
+app.delete('/delete', async (req, res) => {
+    const { id, password } = req.body;
+    try {
+        const result = await postService.deletePost(collection, { id, password });
+        if (result.deletedCount !== 1) {
+            console.log('삭제 실패');
+            return res.json({ isSuccess: false });
+        }
+        return res.json({ isSuccess: true });
+    } catch (err) {
+        console.error(err);
+        return res.json({ isSuccess: false });
+    }
+});
 
 // ### 상세 페이지
 app.get('/detail/:id', async (req, res) => {
