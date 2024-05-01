@@ -37,7 +37,7 @@ app.get('/', async (req, res) => {
 
 // ### 글쓰기 페이지
 app.get('/write', (req, res) => {
-    res.render('write', { title: '테스트 게시판' });
+    res.render('write', { title: '테스트 게시판', mode: 'create' });
 });
 
 app.post('/write', async (req, res) => {
@@ -47,6 +47,28 @@ app.post('/write', async (req, res) => {
     res.redirect(`/detail/${result.insertedId}`);
 });
 
+app.get('/modify/:id', async (req, res) => {
+    const post = await postService.getPostById(collection, req.params.id);
+    console.log(post);
+    res.render('write', { title: '테스트 게시판', mode: 'modify', post });
+});
+
+app.post('/modify/', async (req, res) => {
+    const { id, title, writer, password, content } = req.body;
+
+    const post = {
+        title,
+        writer,
+        password,
+        content,
+        createdDt: new Date().toISOString(),
+    };
+
+    const result = postService.updatePost(collection, id, post);
+    res.redirect(`/detail/${id}`);
+});
+
+
 // ### 상세 페이지
 app.get('/detail/:id', async (req, res) => {
     const result = await postService.getDetailPost(collection, req.params.id);
@@ -54,6 +76,18 @@ app.get('/detail/:id', async (req, res) => {
         title: '테스트 게시판',
         post: result,
     });
+});
+
+app.post('/check-password', async (req, res) => {
+    const { id, password } = req.body;
+    const post = await postService.getPostByIdAndPassword(collection, { id, password });
+
+    // 프론트에서 쓸거임
+    if (!post) {
+        return res.status(404).json({ isExist: false });
+    } else {
+        return res.json({ isExist: true });
+    }
 });
 
 let collection;

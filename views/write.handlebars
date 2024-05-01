@@ -1,18 +1,23 @@
-<h1>[{{title}}] 글 작성</h1>
+<h1>[{{title}}] 글 {{#if (equal mode "create")}}작성{{else}}수정{{/if}}</h1>
 
 <div>
-    <form action="/write" name="boardForm" method="post">
+    <form {{#if (equal mode 'create') }} action='/write' {{else}} action="/modify" {{/if}} name="boardForm" method="post">
+        <!-- 수정 모드면 id 값을 form 통해서 전달함 -->
+        {{#if (equal mode "modify")}}
+            <input type="hidden" name="id" value="{{post._id}}">
+        {{/if}}
+
         <div>
             <label>
                 제목
-                <input type="text" name="title" placeholder="제목을 넣어주세요" value="">
+                <input type="text" name="title" placeholder="제목을 넣어주세요" value="{{post.title}}">
             </label>
         </div>
 
         <div>
             <label>
                 이름
-                <input type="text" name="writer" placeholder="이름을 넣어주세요" value="">
+                <input type="text" name="writer" placeholder="이름을 넣어주세요" value="{{post.writer}}">
             </label>
         </div>
 
@@ -26,8 +31,8 @@
         <div>
             <label>
                 본문을 입력하세요
-                <br/>
-                <textarea placeholder="본문" name="content" cols="50" rows="10"></textarea>
+                <br />
+                <textarea placeholder="본문" name="content" cols="50" rows="10">{{post.content}}</textarea>
             </label>
         </div>
 

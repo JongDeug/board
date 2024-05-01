@@ -31,8 +31,28 @@ async function getDetailPost(collection, id) {
     return await collection.findOneAndUpdate({ _id: new ObjectId(id) }, { $inc: { hits: 1 } }, projectionOption);
 }
 
+async function getPostByIdAndPassword(collection, { id, password }) {
+    return await collection.findOne({ _id: new ObjectId(id), password }, projectionOption);
+}
+
+async function getPostById(collection, id) {
+    return await collection.findOne({ _id: new ObjectId(id) }, projectionOption);
+}
+
+async function updatePost(collection, id, post) {
+    const toUpdatePost = {
+        $set: {
+            ...post,
+        },
+    };
+    return await collection.updateOne({ _id: new ObjectId(id) }, toUpdatePost);
+}
+
 module.exports = {
     writePost,
     list,
     getDetailPost,
+    getPostByIdAndPassword,
+    getPostById,
+    updatePost,
 };

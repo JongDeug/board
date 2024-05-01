@@ -59,7 +59,30 @@
     </div>
 </footer>
 <script>
+    const postOption = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    };
+
     async function modifyPost() {
+        const password = prompt('패스워드를 입력해주세요');
+        if (!password) return;
+
+        const result = await fetch('/check-password', {
+            ...postOption,
+            body: JSON.stringify({ id: "{{post._id}}", password }),
+        });
+
+        // 응답 Response 객체로 표현됨. JSON으로 추출하려면 json method를 사용해야함.
+        const data = await result.json();
+
+        if (data.isExist) {
+            document.location = '/modify/{{post._id}}';
+        } else {
+            alert('패스워드가 올바르지 않습니다.');
+        }
     }
 
     async function deletePost() {
