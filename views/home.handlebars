@@ -1,8 +1,9 @@
 <h1>{{title}}</h1>
 
-<!--검색어-->
-<input type="text" name="search" id="search" value="" size="50" placeholder="검색어를 입력하세요." />
-<button>검색</button>
+<!--검색어, {{search}}는 버튼 눌렀을 때 빈값으로 보이지 않게 하기 위해 설정-->
+<input type="text" name="search" id="search" value="{{search}}" size="50" placeholder="검색어를 입력하세요." />
+<!--쿼리로 데이터 전송-->
+<button onclick="location.href=`/?search=${document.getElementById('search').value}`">검색</button>
 <br />
 
 <!--글쓰기 링크 이동-->
@@ -21,23 +22,42 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td><a href="/detail/">타이틀</a></td>
-            <td align="center">작성자 이름</td>
-            <td align="center">99999</td>
-            <td align="center">2022.12.25</td>
-        </tr>
+        {{#each posts}}
+            <tr>
+                <td><a href="/detail/{{_id}}">{{title}}</a></td>
+                <td>{{writer}}</td>
+                <td>{{hits}}</td>
+                <!--                    헬퍼 함수 사용-->
+                <td>{{dateString createdDt}}</td>
+            </tr>
+        {{/each}}
         </tbody>
     </table>
 </div>
 
 <div>
-    <a>&lt;&lt;</a>
-    <a>&lt;</a>
-    <a>1</a>
-    <a>2</a>
-    <a>3</a>
-    <a>4</a>
-    <a>&gt;</a>
-    <a>&gt;&gt;</a>
+    {{#with paginator}}
+        <a href="/?page=1&search={{@root.search}}">&lt;&lt;</a>
+        {{#if hasPrev}}
+            <a href="/?page={{prevPage}}&search={{@root.search}}">&lt;</a>
+        {{else}}
+            <a>&lt;</a>
+        {{/if}}
+
+        {{#each pageList}}
+            {{#if (equal . @root.paginator.page)}}
+                <a>{{.}}</a>
+            {{else}}
+                <a href="/?page={{.}}&search={{@root.search}}">{{.}}</a>
+            {{/if}}
+        {{/each}}
+
+        {{#if hasNext}}
+            <a href="/?page={{nextPage}}&search={{@root.search}}">&gt;</a>
+        {{else}}
+            <a>&gt;</a>
+        {{/if}}
+
+        <a href="/?page={{lastPage}}&search={{@root.search}}">&gt;&gt;</a>
+    {{/with}}
 </div>

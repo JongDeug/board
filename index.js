@@ -20,9 +20,20 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ### home
-app.get('/', (req, res) => {
-    // views.home.handlebars 파일에 데이터를 렌더링
-    res.render('home', { title: '안녕하세요' });
+app.get('/', async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    console.log(req.query.page)
+    const search = req.query.search || '';
+
+    try {
+        const [posts, paginator] = await postService.list(collection, page, search);
+
+        // views.home.handlebars 파일에 데이터를 렌더링
+        res.render('home', { title: '테스트 게시판', search, paginator, posts });
+    } catch (err) {
+        console.error(err);
+        res.render('home', { title: '테스트 게시판' });
+    }
 });
 
 // ### 글쓰기 페이지
