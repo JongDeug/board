@@ -48,8 +48,24 @@ async function updatePost(collection, id, post) {
     return await collection.updateOne({ _id: new ObjectId(id) }, toUpdatePost);
 }
 
-async function deletePost(collection, {id, password}) {
+
+async function deletePost(collection, { id, password }) {
     return await collection.deleteOne({ _id: new ObjectId(id), password });
+}
+
+async function findPostByComment(collection, id, idx, password) {
+    return await collection.findOne({
+        _id: new ObjectId(id),
+        comments: { $elemMatch: { idx: parseInt(idx), password } },
+    }, projectionOption);
+}
+
+async function addComment(collection, id, comment) {
+    await collection.updateOne({ _id: new ObjectId(id) }, { $push: { comments: comment } });
+}
+
+async function deleteComment(collection, id, commentIdx) {
+    await collection.updateOne({ _id: new ObjectId(id) }, { $pull: { comments: { idx: parseInt(commentIdx) } } });
 }
 
 module.exports = {
@@ -59,5 +75,8 @@ module.exports = {
     getPostByIdAndPassword,
     getPostById,
     updatePost,
-    deletePost
+    deletePost,
+    findPostByComment,
+    deleteComment,
+    addComment,
 };

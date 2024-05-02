@@ -55,20 +55,24 @@ app.get('/modify/:id', async (req, res) => {
 
 app.post('/modify/', async (req, res) => {
     const { id, title, writer, password, content } = req.body;
+    // if (!password) {
+    //     res.status(400);
+    //     console.error('패스워드가 없음');
+    //     return;
+    // }
+    let post;
     if (!password) {
-        res.status(400);
-        console.error('패스워드가 없음');
-        return;
+        post = {
+            title,
+            writer,
+            content,
+            createdDt: new Date().toISOString(),
+        };
+    } else {
+        post = {
+            title, writer, password, content, createdDt: new Date().toISOString(),
+        };
     }
-
-    const post = {
-        title,
-        writer,
-        password,
-        content,
-        createdDt: new Date().toISOString(),
-    };
-
     const result = postService.updatePost(collection, id, post);
     res.redirect(`/detail/${id}`);
 });
@@ -114,25 +118,30 @@ app.post('/write-comment', async (req, res) => {
     const post = await postService.getPostById(collection, id);
 
     if (post.comments) {
-        post.comments.push({
-            idx: post.comments.length + 1,
+        const idx = post.comments.length + 1;
+        post.comments = {
+            idx,
             name,
             password,
             comment,
             createdDt: new Date().toISOString(),
-        });
-    } else {
-        post.comments = [{
-            idx: 1,
-            name,
-            password,
-            comment,
-            createdDt: new Date().toISOString(),
-        }];
+        };
     }
 
-    await postService.updatePost(collection, id, post);
+    await postService.addComment(collection, id, post.comments);
     return res.redirect(`/detail/${id}`);
+});
+
+app.delete('/delete-comment', async (req, res) => {
+    const { id, idx, password } = req.body;
+    const post = await postService.findPostByComment(collection, id, idx, password);
+
+    if (!post) {
+        return res.json({ isSuccess: false });
+    }
+
+    await postService.deleteComment(collection, id, idx);
+    return res.json({ isSuccess: true });
 });
 
 let collection;
