@@ -16,10 +16,12 @@
 
     <section>
         <div>
-            <h3>3개의 댓글이 있습니다.</h3>
+            <h3>{{lengthOfList comments}}개의 댓글이 있습니다.</h3>
         </div>
 
         <form action="/write-comment" method="post">
+            <!--            게시글의 id-->
+            <input type="hidden" name="id" value="{{_id}}">
             <div>
                 <div>
                     <!--                name 속성은 폼(form)이 제출된 후 서버에서 폼 데이터(form data)를 참조-->
@@ -37,19 +39,21 @@
     </section>
 
     <section>
-        <div>
-            <br>
+        {{#each comments}}
             <div>
-                작성자 : <b>댓글 작성자</b>
+                <br>
+                <div>
+                    작성자 : <b>{{name}}</b>
+                </div>
+                <div>
+                    작성일자 : {{dateString createdDt}}
+                    <button onclick="deleteComment(`{{idx}}`)">삭제</button>
+                </div>
             </div>
             <div>
-                작성일자 : 2024-04-30 00:00:00
-                <button onclick="deleteComment('1')">삭제</button>
+                <pre>{{comment}}</pre>
             </div>
-        </div>
-        <div>
-            <pre>{{comment}}</pre>
-        </div>
+        {{/each}}
     </section>
 {{/with}}
 
@@ -108,5 +112,9 @@
         } else {
             document.location = '/';
         }
+    }
+
+    async function deleteComment(id) {
+
     }
 </script>

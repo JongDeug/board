@@ -55,7 +55,7 @@ app.get('/modify/:id', async (req, res) => {
 
 app.post('/modify/', async (req, res) => {
     const { id, title, writer, password, content } = req.body;
-    if(!password) {
+    if (!password) {
         res.status(400);
         console.error('패스워드가 없음');
         return;
@@ -107,6 +107,32 @@ app.post('/check-password', async (req, res) => {
     } else {
         return res.json({ isExist: true });
     }
+});
+
+app.post('/write-comment', async (req, res) => {
+    const { id, name, password, comment } = req.body;
+    const post = await postService.getPostById(collection, id);
+
+    if (post.comments) {
+        post.comments.push({
+            idx: post.comments.length + 1,
+            name,
+            password,
+            comment,
+            createdDt: new Date().toISOString(),
+        });
+    } else {
+        post.comments = [{
+            idx: 1,
+            name,
+            password,
+            comment,
+            createdDt: new Date().toISOString(),
+        }];
+    }
+
+    await postService.updatePost(collection, id, post);
+    return res.redirect(`/detail/${id}`);
 });
 
 let collection;
